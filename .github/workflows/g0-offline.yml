@@ -26,5 +26,6 @@ jobs:
           node --check experiments/g0/global.js
           node --check experiments/g0/coordinator.js
           node --check experiments/g0/tests/coordinator.test.js
+          node --check experiments/g0/tests/crash-regression.test.js
       - name: Run fixture-only tests
-        run: node --test experiments/g0/tests/coordinator.test.js
+        run: node --test experiments/g0/tests/*.test.js
