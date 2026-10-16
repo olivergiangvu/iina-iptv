@@ -68,5 +68,5 @@ test('offline errors redact original message, back off >= 1 hour', async () => {
 });
 test('invalid intervals and unsupported datasets fail closed', async () => {
   assert.throws(() => env({intervalsHours:{channels:0.25,epg:3}}), /Invalid/);
-  await assert.rejects(env().core.refresh('movies',true), /Unknown/);
+  assert.throws(() => env().core.refresh('movies',true), /Unknown/);
 });
