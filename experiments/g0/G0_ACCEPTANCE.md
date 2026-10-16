@@ -43,3 +43,14 @@
 | G0-08 scope sign-off | PASS for planning scope | previous five-module scope accepted; PR review pending |
 
 **No gate should be upgraded to a runtime PASS from static inspection or mock test results alone.**
+
+## Incident G0-CRASH-01 — startup crash on IINA 1.5.0 (180)
+
+- **Status:** reproduced by operator on macOS 27.0.1, Apple Silicon, 2026-10-16. Remediation is **source-reviewed and CI-verified only**, not yet re-tested on Mac.
+- **Crash signature:** `JavascriptAPIGlobalController.postMessage(_:_:_:)` → `EXC_BREAKPOINT/SIGTRAP`, invoked via `JavascriptAPIGlobalChild.postMessage` while `PlayerCore.loadPlugins()` initialized the player plugin.
+- **Exact code issue:** old `main.js` sent `g0:hello` synchronously at top level; global `g0:hello` handler responded immediately with `bus.postMessage(playerId, "g0:status", ...)`. In official IINA v1.5.0 Swift implementation, string target resolution force-unwraps a matching plugin instance (`pc.plugins.first { ... }!`) which can be missing before plugin loading finishes. Crash stack and Swift source strongly support this initialization race.
+- **Fix strategy:** delete startup handshake and ALL global→player messages. Keep only **manual, one-way** messages from player menu to global; global reports test outcome in its own Log Viewer. No plugin/network/media code changes.
+- **Operator recovery:** while IINA is quit, unlink only the experimental `experiments/g0` development plugin. Update git branch before re-link. No need to reinstall IINA or touch other plugins.
+- **Restart gate:** restart **once**, after applying the updated fix. If any crash remains, unlink immediately and mark BLOCKED. Do not iterate multiple unvalidated hotfixes on the Mac.
+- **G0-06 split:** global entry loads / one-way ping; multiwindow singleflight; Keychain; and global→player targeted replies. **The last item is deferred/unsafe on IINA 1.5.0**, not a G0 requirement until a distinct safe design is demonstrated.
+- **Reference:** https://github.com/iina/iina/blob/v1.5.0/iina/JavascriptAPIGlobal.swift#L89-L105
