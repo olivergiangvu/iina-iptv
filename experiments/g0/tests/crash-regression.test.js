@@ -13,3 +13,11 @@ test('no automatic child/global round trip during plugin evaluation', () => {
   assert.match(child, /iina\.menu\.addItem/);
   assert.match(parent, /g0:ping/);
 });
+
+test('IINA v1.5.0 Keychain method names match native JSExport', () => {
+  const root = path.join(__dirname, '..');
+  const global = fs.readFileSync(path.join(root, 'global.js'), 'utf8');
+  assert.match(global, /iina\.utils\.keychainWrite\(/);
+  assert.match(global, /iina\.utils\.keychainRead\(/);
+  assert.doesNotMatch(global, /iina\.utils\.keyChain/);
+});

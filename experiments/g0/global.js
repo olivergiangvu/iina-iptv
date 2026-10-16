@@ -43,8 +43,8 @@ iina.menu.addItem(iina.menu.item("G0: Run optional synthetic Keychain check", ()
   const account = "fixture-not-a-real-user";
   const dummy = "IINA_G0_TEST_ONLY";
   try {
-    const wrote = iina.utils.keyChainWrite(service, account, dummy);
-    const read = iina.utils.keyChainRead(service, account);
+    const wrote = iina.utils.keychainWrite(service, account, dummy);
+    const read = iina.utils.keychainRead(service, account);
     iina.console.log("[G0] Keychain " + (wrote && read === dummy ? "PASS" : "FAIL"));
   } catch (_) {
     iina.console.log("[G0] Keychain FAIL");

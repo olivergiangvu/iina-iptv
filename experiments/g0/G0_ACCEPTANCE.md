@@ -54,3 +54,7 @@
 - **Restart gate:** restart **once**, after applying the updated fix. If any crash remains, unlink immediately and mark BLOCKED. Do not iterate multiple unvalidated hotfixes on the Mac.
 - **G0-06 split:** global entry loads / one-way ping; multiwindow singleflight; Keychain; and global→player targeted replies. **The last item is deferred/unsafe on IINA 1.5.0**, not a G0 requirement until a distinct safe design is demonstrated.
 - **Reference:** https://github.com/iina/iina/blob/v1.5.0/iina/JavascriptAPIGlobal.swift#L89-L105
+
+## IINA Keychain API spelling audit (2026-10-16)
+
+Before the operator runs the Keychain smoke test, the G0 probe was corrected to use `iina.utils.keychainWrite(service, name, password)` and `iina.utils.keychainRead(service, name)`, consistent with the official [IINA v1.5.0 native JSExport implementation](https://github.com/iina/iina/blob/v1.5.0/iina/JavascriptAPIUtils.swift). Earlier G0 code incorrectly used `keyChainWrite/keyChainRead`. The new CI static test guards against this regression. Keychain runtime test remains **NOT RUN**.
