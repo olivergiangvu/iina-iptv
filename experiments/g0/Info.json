@@ -1,0 +1,15 @@
+{
+  "name": "IINA IPTV G0 Probe (Synthetic Only)",
+  "identifier": "vn.olivergiang.iina-iptv-g0",
+  "version": "0.0.1",
+  "description": "Isolated offline runtime feasibility probe; not an IPTV plugin release.",
+  "author": {
+    "name": "IINA IPTV Project",
+    "url": "https://github.com/olivergiangvu/iina-iptv"
+  },
+  "entry": "main.js",
+  "globalEntry": "global.js",
+  "permissions": [
+    "file-system"
+  ]
+}

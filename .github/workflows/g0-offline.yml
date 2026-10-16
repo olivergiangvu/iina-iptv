@@ -1,0 +1,31 @@
+name: G0 offline smoke checks
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/g0/**'
+      - '.github/workflows/g0-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  g0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Validate isolated manifest and JavaScript syntax
+        run: |
+          node --version
+          node -e "const p=require('./experiments/g0/Info.json'); if(p.globalEntry!=='global.js'||p.identifier==='net.terastar.iina-channels'||p.permissions.includes('network-request')) process.exit(1)"
+          node --check experiments/g0/main.js
+          node --check experiments/g0/global.js
+          node --check experiments/g0/coordinator.js
+          node --check experiments/g0/tests/coordinator.test.js
+          node --check experiments/g0/tests/crash-regression.test.js
+      - name: Run fixture-only tests
+        run: node --test experiments/g0/tests/*.test.js
